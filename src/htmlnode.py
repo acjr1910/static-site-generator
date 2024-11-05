@@ -29,3 +29,20 @@ class LeafNode(HTMLNode):
       return self.value
     else:
       return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+    
+class ParentNode(HTMLNode):
+  def __init__(self, tag, children):
+    super().__init__(tag, children=children)
+
+  def to_html(self):
+    if self.tag == None:
+      raise ValueError("All parent nodes must have a tag")
+    elif self.children == None:
+      raise ValueError("All parent nodes must have children")
+    
+    def helper(children):
+      if not children:
+        return ""
+      return children[0].to_html() + helper(children[1:])
+    
+    return f"<{self.tag}>{helper(self.children)}</{self.tag}>"
